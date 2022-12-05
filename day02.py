@@ -5,6 +5,8 @@ class Move(Enum):
     ROCK = 0
     PAPER = 1
     SCISSORS = 2
+    def getPoints(self):
+        return self.value + 1
 
 class Outcome(Enum):
     WIN = 6
@@ -12,8 +14,8 @@ class Outcome(Enum):
     LOSE = 0
 
 def play(prompt, resp):
-    score = resp.value + 1
-    result = (resp.value + 1) - (prompt.value + 1)
+    score = resp.getPoints()
+    result = resp.getPoints() - prompt.getPoints()
     if result == 0:
         score += Outcome.DRAW.value
     elif (result % len(Move)) == 1:
