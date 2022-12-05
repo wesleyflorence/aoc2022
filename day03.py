@@ -13,7 +13,6 @@ def get_priority(compartment):
 def part_one():
     rucksacks = []
     for sack in aoc.read_input("03"):
-        sack = sack.replace("\n", "")
         mid = len(sack) // 2
         rucksacks.append(set(sack[0:mid]).intersection(sack[mid:]))
     return reduce(lambda base, el: base + get_priority(el), rucksacks, 0)
@@ -23,7 +22,7 @@ def part_two():
     rucksacks = []
     team = []
     for i, sack in enumerate(aoc.read_input("03")):
-        team.append(set(sack.replace("\n", "")))
+        team.append(set(sack))
         if i % team_size == team_size-1:
             rucksacks.append(get_priority(set.intersection(*team)))
             team = []

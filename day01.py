@@ -5,7 +5,7 @@ def build_inventory():
     elf = 0
     inventory = defaultdict(int)
     for calorie in aoc.read_input("01"):
-        if calorie == '\n':
+        if not calorie:
             elf += 1
         else:
             inventory[elf] += int(calorie)
