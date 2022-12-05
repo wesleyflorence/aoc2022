@@ -13,7 +13,7 @@ class Outcome(Enum):
     DRAW = 3
     LOSE = 0
 
-def play(prompt, resp):
+def play(prompt: Move, resp: Move):
     score = resp.getPoints()
     result = resp.getPoints() - prompt.getPoints()
     if result == 0:
@@ -24,13 +24,13 @@ def play(prompt, resp):
         score += Outcome.LOSE.value
     return score
 
-def parse_guide(lookup):
+def parse_guide(lookup: dict):
     guide = []
     for line in aoc.read_input("02"):
         guide.append((lookup[line[0]], lookup[line[2]]))
     return guide
 
-def desired_move(prompt, outcome):
+def desired_move(prompt: Move, outcome: Outcome):
     if outcome == Outcome.WIN:
         resp = Move((prompt.value + 1) % len(Move))
     elif outcome == Outcome.LOSE:
