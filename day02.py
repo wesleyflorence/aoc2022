@@ -1,7 +1,10 @@
 import aoc
 from enum import Enum
 
-Move = Enum('Move', ['ROCK', 'PAPER', 'SCISSORS'])
+class Move(Enum):
+    ROCK = 0
+    PAPER = 1
+    SCISSORS = 2
 
 class Outcome(Enum):
     WIN = 6
@@ -9,8 +12,8 @@ class Outcome(Enum):
     LOSE = 0
 
 def play(prompt, resp):
-    score = resp.value
-    result = resp.value - prompt.value
+    score = resp.value + 1
+    result = (resp.value + 1) - (prompt.value + 1)
     if result == 0:
         score += Outcome.DRAW.value
     elif (result % len(Move)) == 1:
@@ -27,9 +30,9 @@ def parse_guide(lookup):
 
 def desired_move(prompt, outcome):
     if outcome == Outcome.WIN:
-        resp = Move((prompt.value % len(Move)) + 1)
+        resp = Move((prompt.value + 1) % len(Move))
     elif outcome == Outcome.LOSE:
-        resp = Move(((prompt.value - 2) % len(Move)) + 1)
+        resp = Move((prompt.value - 1) % len(Move))
     else:
         resp = prompt
     return (prompt, resp)
