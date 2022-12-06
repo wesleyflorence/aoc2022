@@ -3,7 +3,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 
 @dataclass
-class Op:
+class Operation:
     count: int
     start: int
     dest: int
@@ -24,10 +24,10 @@ def parse_crates():
         if not op: continue
         values = re.findall(r'move (.*?) from (.*?) to (.*)', op)[0]
         values = [int(x) for x in values]
-        operations.append(Op(*values))
+        operations.append(Operation(*values))
     return (stacks, supply, operations)
     
-def move_crates(op: Op, crates, useQueue=False):
+def move_crates(op: Operation, crates, useQueue=False):
     count = op.count
     stack = []
     while count:
