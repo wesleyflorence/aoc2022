@@ -9,30 +9,23 @@ class Op:
     dest: int
 
 def parse_crates():
-    ops = []
-    crates = []
-    stacks = 0
-    for line in open(f"input/05.input"):
-        line = line.rstrip('\n')
-        if line and line[:4] == "move":
-            ops.append(line)
-        elif "[" in line:
-            crates.append(line)
-        elif line:
-            stacks = int(max(line))
+    input_data = open("input/05.input").read()
+    stack_text, instructions = [part.split("\n") for part in input_data.split("\n\n")]
+    stacks = int(max(stack_text.pop()))
 
     supply = defaultdict(list)
-    for row in crates:
-        for col in range(1, stacks*4 + 1, 4):
-            if row[col] != " ":
-                supply[((col-1)//4)+1].insert(0, row[col])
+    for row in stack_text:
+        for col, box in enumerate(row[1::4]):
+            if box != " ":
+                supply[col+1].insert(0, box)
 
-    parsed_ops = []
-    for op in ops:
+    operations = []
+    for op in instructions:
+        if not op: continue
         values = re.findall(r'move (.*?) from (.*?) to (.*)', op)[0]
         values = [int(x) for x in values]
-        parsed_ops.append(Op(*values))
-    return (stacks, supply, parsed_ops)
+        operations.append(Op(*values))
+    return (stacks, supply, operations)
     
 def move_crates(op: Op, crates, useQueue=False):
     count = op.count
