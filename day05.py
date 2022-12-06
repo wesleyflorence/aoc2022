@@ -39,15 +39,10 @@ def move_crates(op: Operation, crates, useQueue=False):
     return crates
 
 def organize_supply_stacks(is9001: bool):
-    top_crates = ""
     stacks, crates, ops = parse_crates()
     for op in ops:
         crates = move_crates(op, crates, is9001)
-
-    for stack in range(1, stacks+1):
-        top_crates += crates[stack].pop()
-
-    return top_crates
+    return "".join(crates[s+1].pop() for s in range(stacks))
 
 def part_one():
     return organize_supply_stacks(False)
