@@ -12,8 +12,8 @@ class FileSystem():
     def is_ls(self, line: list[str]):
         return True if line[0] == "$" and line[1] == "ls" else False
     
-    def lookup(self, path: list[str]) -> dict:
-        pointer:dict = self.sys
+    def sys_lookup(self, path: list[str]) -> dict:
+        pointer: dict = self.sys
         for i, p in enumerate(path):
             if p not in pointer:
                 pointer[p] = {}
@@ -33,29 +33,29 @@ class FileSystem():
             self.stack.pop()
         else:
             self.stack.append(line[2])
-        return self.lookup(self.stack)
+        return self.sys_lookup(self.stack)
     
-    def ls(self, commands, i):
-        while i < len(commands) and not self.is_cd(commands[i]):
-            if self.is_ls(commands[i]): pass
-            elif commands[i][0] == "dir":
-                if commands[i][1] not in self.cur:
-                    self.cur[commands[i][1]] = {}
-                    self.cur[commands[i][1]][".."] = self.stack[len(self.stack)-1]
-                    self.cur[commands[i][1]]["_size"] = 0
+    def ls(self, lines, i):
+        while i < len(lines) and not self.is_cd(lines[i]):
+            line = lines[i]
+            if self.is_ls(line): pass
+            elif line[0] == "dir" and line[1] not in self.cur:
+                self.cur[line[1]] = {}
+                self.cur[line[1]][".."] = self.stack[len(self.stack)-1]
+                self.cur[line[1]]["_size"] = 0
             else:
-                self.cur[commands[i][1]] = commands[i][0]
-                self.add_size(commands[i][0])
+                self.cur[line[1]] = line[0]
+                self.add_size(line[0])
             i += 1
     
     def build_filetree(self, term_output: list[str]):
-        commands = [l.split(" ") for l in term_output]
-        for i in range(len(commands)):
-            line = commands[i]
+        lines = [l.split(" ") for l in term_output]
+        for i in range(len(lines)):
+            line = lines[i]
             if self.is_cd(line): 
-                self.cur = self.cd(commands[i])
+                self.cur = self.cd(lines[i])
             if self.is_ls(line):
-                self.ls(commands, i)
+                self.ls(lines, i)
         return self.sys
 
 
@@ -74,9 +74,9 @@ def part_one():
 
 def part_two():
     space = 70_000_000
-    update = 30_000_000
+    update_req = 30_000_000
     fs = FileSystem().build_filetree(aoc.read_input("07"))
-    to_remove = abs(space - update - fs["/"]["_size"])
+    to_remove = abs(space - update_req - fs["/"]["_size"])
 
     def get_candidate_size(dir, remove):
         total = []
